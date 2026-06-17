@@ -19,7 +19,7 @@ Usage (once implemented):
 """
 
 from tools import search_listings, suggest_outfit, create_fit_card
-
+from style_profile import update_profile_from_session, get_profile_summary
 
 # ── session state ─────────────────────────────────────────────────────────────
 
@@ -130,6 +130,9 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # Step 6: Fit card
     session["fit_card"] = create_fit_card(session["outfit_suggestion"], session["selected_item"])
 
+    # Update style profile from this session
+    update_profile_from_session(session)
+    
     # Step 7: Return
     return session
     # TODO: implement the planning loop
