@@ -112,8 +112,14 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     session["search_results"] = search_listings(description, size=size, max_price=max_price)
 
     if not session["search_results"]:
-        session["error"] = "No listings matched your search — try broader keywords, remove the size filter, or raise your price ceiling."
-        return session
+        # Retry once with no size or price filters
+        session["search_results"] = search_listings(description)
+        if not session["search_results"]:
+            session["error"] = "No listings matched your search — try broader keywords, remove the size filter, or raise your price ceiling."
+            return session
+        else:
+            session["parsed"]["size"] = None
+            session["parsed"]["max_price"] = None
 
     # Step 4: Select top result
     session["selected_item"] = session["search_results"][0]
